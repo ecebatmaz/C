@@ -1,0 +1,122 @@
+
+#include <iostream>
+#include <string>
+#include <fstream>
+
+using namespace std;
+
+class Player
+{
+public:
+    string name;
+    int points;
+    int rebounds;
+    int assists;
+};
+
+void LoadData(Player data[], int &count);
+void MostScorerPlayer(Player data[], int count);
+void DoubleDouble(Player data[], int count);
+void TripleDouble(Player data[], int count);
+void Report(Player data[], int count);
+
+void LoadData(Player data[], int &count)
+{
+    ifstream in("/Users/ecebatmaz/Desktop/Exam 1 Practice/Knicks Stats/Knicks Stats/data.txt");
+    if (in.fail()){
+        cout << "Failed to read the file!" << endl;
+        return;
+    }
+    while (!in.eof()){
+        in >> data[count].name;
+        in >> data[count].points;
+        in >> data[count].rebounds;
+        in >> data[count].assists;
+        count++;
+    }
+    in.close();
+}
+
+int main()
+{
+    Player data[100];
+    int count = 0;
+    
+    LoadData (data, count);
+    int choice;
+    
+    do {
+        cout << "1- Most Scorer Player " << endl;
+        cout << "2- Double-Double " << endl;
+        cout << "3- Triple-Double " << endl;
+        cout << "4- Report " << endl;
+        cout << "0- Exit " << endl;
+        cout << "Your choice? "; cin >> choice;
+        if (choice == 1){
+            MostScorerPlayer(data, count);
+        }
+        else if (choice == 2){
+            DoubleDouble(data, count);
+        }
+        else if (choice == 3){
+            TripleDouble(data, count);
+        }
+        else if (choice == 4){
+            Report(data, count);
+        }
+        else{
+            cout << "Invalid choice! " << endl;
+        }
+    } while (choice !=0);
+}
+
+void MostScorerPlayer(Player data[], int count)
+{
+    int mScorer = 0;
+    for (int i = 1; i < count; i++) //i-- = decremented by 1, i+=2 = increment by 2
+    //i = 1 because we assumed that the first player is the most scorer so we skip counting him
+    {
+        if(data[i].points == 0) { continue; } //CONTINUES EVEN IF THERE IS A PLAYER WITH 0 SOCRE OR NO SCORE
+        else if(data[i].points == data[mScorer].points)
+        {
+            i = mScorer;
+        }
+    }
+    cout << "Most scorer player is " << data[mScorer].name << endl;
+}
+
+void DoubleDouble(Player data[], int count)
+{
+    for (int i = 0; i < count; i++)
+    {
+        if((data[i].rebounds > 9 && data[i].assists > 9) || (data[i].rebounds > 9 &&  data[i].points > 9) || (data[i].assists > 9 && data[i].points > 9))
+        {
+            if(!(data[i].rebounds > 9 && data[i].assists > 9 &&  data[i].points > 9)) //doesnt include triple double
+            {
+                cout << data[i].name << " achieved double double. " << endl;
+            }
+        }
+    }
+}
+
+void TribleDouble(Player data[], int count)
+{
+    for (int i = 0; i < count; i++)
+    {
+        if(data[i].rebounds > 9 && data[i].assists > 9 &&  data[i].points > 9 )
+        {
+            cout << data[i].name << " achieved trible double. " << endl;
+        }
+    }
+}
+
+void Report(Player data[], int count)
+{
+    for (int i = 0; i < pcount; i++)
+    {
+        int pt = data[i].points;
+        int rb = data[i].rebounds;
+        int as = data[i].assists;
+        cout << data[i].name << " Point:" << pt << " Reb.: " << rb << " Asst.: " << as << endl;
+    }
+}
