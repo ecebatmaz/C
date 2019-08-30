@@ -1,0 +1,190 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+
+using namespace std;
+
+class Ticket
+{
+public:
+    int TicketNum;
+    double Amount;
+    string Plate;
+    bool ticketPaid;
+};
+
+//FUNCTION PROTOTYPES - DOES NOT NEED TO BE IN ORDER
+void AddNewParkingTicket(Ticket tickets[], int &ticketCount);
+void PayParkingTicket(Ticket tickets[], int ticketCount);
+void ReportByPlate(Ticket tickets[], int ticketCount);
+void GrandReport(Ticket tickets[], int ticketCount);
+void ReadFile(Ticket tickets[], int &ticketCount[]);
+void SaveTickets(Ticket tickets[], int ticketCount);
+
+int main()
+{
+    Ticket tickets[100];
+    int ticketCount = 0;
+    
+    ReadFromFile(tickets, cnt);
+    
+    do
+    {
+        int choice;
+        cout << "1 - Create New Parking Ticket " << endl;
+        cout << "2 - Pay Parking Ticket " << endl;
+        cout << "3 - Report By Plate Number " << endl;
+        cout << "3 - Grand Report " << endl;
+        cout << "0 - Exit " << endl;
+        cout << "What do you want to do? "; cin >> choice;
+        
+        if (choice == 1)
+        {
+            AddNewParkingTicket(tickets, ticketCount);
+        }
+        else if (choice == 2)
+        {
+            PayParkingTicket(tickets, ticketCount);
+        }
+        else if (choice == 3)
+        {
+            ReportByPlate(tickets, ticketCount);
+        }
+        else if (choice == 4)
+        {
+            GrandReport(tickets, ticketCount);
+        }
+        else
+        {
+            cout << "Invalid Option! " << endl;
+        }
+    } while (choice !=0)
+        
+       SaveFile(tickets, ticketCount);  
+}
+
+void AddNewParkingTicket(Ticket tickets[], int &ticketCount) //BY REFERENCE - HE CAN ADJUST THE INFO AND I CAN SEE THE CHANGES
+{
+    cout << "Adding New Parking Ticket " << endl;
+    
+    cout << "What is the ticket number? "; cin >> tickets[ticketCount].ticketNum
+    
+    cout << "Amount of the ticket: "; cin >> tickets[ticketCount].Amount;
+    
+    cout << "Plate Number: "; cin >> tickets[ticketCount].Plate;
+    
+    if (tickets[ticketCount].TicketNum > 1 && tickets[ticketCount].TicketNum < 20000)
+    {
+        tickets[ticketCount].ticketPaid = false;
+        ticketCount++;
+    }
+    else
+    {
+        cout << "Wrong Input! " << endl;
+        return;
+    }
+}
+
+void PayParkingTicket(Ticket tickets[], int ticketCount) //BY VALUE - I CANT SEE THE CHANGES
+{
+    cout << "Paying Parking Ticket " << endl;
+    
+    int givenTicket = 0;
+    cout << "What is the ticket number? "; cin >> givenTicket;
+    
+    bool found = false;
+    
+    for (int i = 0; i < ticketCount; i++)
+    {
+        if (tickets[ticketCount].TicketNum == givenTicket)
+        {
+            cout << "Amount due for the ticket: " << tickets[ticketCount].Amount << endl;
+            tickets[i].ticketPaid = true;
+            cout << "Ticket is now paid -- thank you! " << endl;
+            found = true;
+            
+            break;
+        }
+    }
+    
+    if (found = false )
+    {
+        cout << "Ticket was not found, check the number and try again." << endl;
+    }
+}
+
+void ReportByPlate(Ticket tickets[], int ticketCount)
+{
+    cout << "Displaying Report by Plate " << endl;
+    
+    string givenPlate;
+    cout << "What is the plate number? "; cin >> givenPlate;
+    double sum = 0; //INITIALIZED THE TOTAL
+    
+    for (int i = 0; i < ticketCount; i++)
+    {
+        if (tickets[i].Plate == givenPlate)
+        {
+             sum += tickets[i].amount;
+            cout << "Ticket Number: " << tickets[ticketCount].TicketNum << " $ " << tickets[ticketCount].Amount << endl;
+        }
+    }
+}
+
+void GrandReport(Ticket tickets[], int ticketCount)
+{
+    int unpaidTotal = 0;
+    int paidTotal = 0;
+    
+    
+    cout << "Displaying Grand Report: " << endl;
+    for (int i = 0; i < ticketCount; i ++)
+    {
+        if (ticket[i].paid == TRUE)
+        {
+            paidTotal++;
+            cout << " PAID " << endl;
+        }
+        else {
+            unpaidTotal++;
+            cout << " UNPAID " << endl;
+        }
+        cout << "Total Paid " << paidTotal << endl;
+        cout << "Total Unpaid " << paidTotal << endl;
+}
+
+void ReadFile(Ticket tickets[], int &ticketCount)
+{
+    ifstream fileIn("/Users/ecebatmaz/Desktop/Exam 1 Practice/tickets.txt");
+    if (!fileIn)
+    {
+        return;
+    }
+    
+    while(!fileIn.eof())
+    {
+        fileIn >> tickets[ticketCount].TicketNum;
+        fileIn >> tickets[ticketCount].Amount;
+        fileIn >> tickets[ticketCount].Plate;
+        fileIn >> tickets [ticketCount].ticketPaid;
+        ticketCount++;
+    }
+    fileIn.close();
+}
+
+void SaveTickets(Ticket tickets[], int ticketCount)
+{
+    ofstream fileOut("/Users/ecebatmaz/Desktop/Exam 1 Practice/tickets.txt");
+    for (int i = 0; i < ticketCount; i++)
+    {
+        fileOut << tickets[i].TicketNum << " ";
+        fileOut << tickets[i].Amount << " ";
+        fileOut << tickets[i].Plate << " ";
+        fileOut << tickets[i].ticketPaid;
+        if ( i < ticketCount - 1) //last one does not need a new line
+        {
+            fileOut << endl;
+        }
+    }
+    fileOut.close();
+}
