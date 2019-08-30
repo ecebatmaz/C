@@ -1,0 +1,166 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+
+using namespace std;
+
+class Detective
+{
+public:
+    string name;
+    string specialty;
+    int experience;
+};
+
+//PROTOTYPES
+void AddDetective( Detective detectives[], int &dCount);
+void SearchDetective( Detective detectives[], int dCount);
+void ReportBySpec(Detective detectives[], int dCount, string specialty);
+void Report( Detective detectives[], int dCount);
+void ReadFile ( Detective detectives[], int &dCount);
+void SaveFile ( Detective detectives[], int dCount);
+
+int main()
+{
+    Detective detectives[100];
+    Detective specialty[100];
+    int dCount = 0;
+    
+    ReadFile(detectives, dCount);
+    
+    int choice;
+    do
+    {
+        cout << "Welcome to Detective v2.2 " << endl;
+        cout << "1- Add a Detective " << endl;
+        cout << "2- Search a Detective " << endl;
+        cout << "3- Report " << endl;
+        cout << "0- Exit " << endl;
+        cout << "What would you like to do? "; cin >> choice;
+       
+        if (choice == 1)
+        {
+            AddDetective(detectives, dCount);
+        }
+        else if (choice == 2)
+        {
+            SearchDetective(detectives, dCount);
+        }
+        else if (choice == 3)
+        {
+            Report(detectives, dCount);
+        }
+        else
+        {
+            cout << "Wrong Input! " << endl;
+        }
+        
+    } while(choice != 0);
+    
+    SaveFile(detectives, dCount);
+    
+    return 0;
+}
+
+void AddDetective( Detective detectives[], int &dCount)
+{
+    string n; //GIVEN NAME
+    cout << "Enter Name of Detective: ";
+    cin >> n;
+    cout << "Enter Specialty(Homecide, Fraud, Theft, Traffic, or Gangs): ";
+    cin >> detectives[dCount].specialty;
+    cout << "Years of experience: ";
+    cin >> detectives[dCount].experience;
+    dCount++;
+    
+    for(int i = 0; i < dCount; i++)
+    {
+        if(detectives[dCount].name == n )
+        {
+            cout << "Detective name already exists. No detectives with the same name allowed! " << endl;
+            return;
+        }
+    }
+}
+
+void SearchDetective( Detective detectives[], int dCount)
+{
+    string spec;
+    cout << "What specialty do you need? (Homecide, Fraud, Theft, Traffic, or Gangs) "; cin >> spec;
+    int num;
+    cout << "What is the minimum years of experience requires? "; cin >> num;
+    
+    Detective best;
+    best.experience = -1;
+    
+    for(int i = 0; i < dCount; i++)
+    {
+        if(detectives[i].experience >= num && detectives[i].specialty == spec)
+        {
+            if(detectives[i].experience > best.experience)
+            {
+                best = detectives[i];
+            }
+        }
+    }
+    if (best.experience == -1)
+    {
+       cout << "No detectives wih this criteria was found! " << endl;
+    }
+    else {
+        cout << best.name << " seems to be a good fit. " << endl;
+    }
+}
+
+void ReportBySpec(Detective detectives[], int dCount, string specialty)
+{
+    for (int i = 0; i < dCount; i++)
+    {
+        if (detectives[i].specialty == specialty)
+        {
+           cout << "Detective " << detectives[i].name << " with " << detectives[i].experience << " years of experience." << endl;
+        }
+    }
+}
+
+void Report( Detective detectives[], int dCount)
+{
+    ReportBySpec(detectives, dCount, "Homicide");
+    ReportBySpec(detectives, dCount, "Fraud");
+    ReportBySpec(detectives, dCount, "Theft");
+    ReportBySpec(detectives, dCount, "Traffic");
+    ReportBySpec(detectives, dCount, "Gangs");
+}
+
+void ReadFile(Detective detective[], int &dCount)
+{
+    ifstream fileIn("/Users/ecebatmaz/Desktop/Exam 1 Practice/Detectives/detectives.txt");
+    if (!fileIn)
+    {
+        return;
+    }
+    while(!fileIn.eof())
+    {
+        fileIn >> detective[dCount].name;
+        fileIn >> detective[dCount].specialty;
+        fileIn >> detective[dCount].experience;
+        dCount++;
+    }
+    fileIn.close();
+}
+
+void SaveFile ( Detective detectives[], int dCount)
+{
+    ofstream fileOut("/Users/ecebatmaz/Desktop/Exam 1 Practice/Detectives/detectives.txt");
+    for(int i = 0; i < dCount; i++)
+    {
+        fileOut << detectives[i].name << " ";
+        fileOut << detectives[i].specialty << " ";
+        fileOut << detectives[i].experience << " ";
+        if ( i < dCount - 1)
+        {
+            fileOut << endl;
+        }
+    }
+            fileOut.close();
+}
